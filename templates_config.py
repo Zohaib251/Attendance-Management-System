@@ -19,4 +19,4 @@ def render_template(
     context["user"] = current_user
     context["user_is_student"] = current_user.is_student if current_user else False
     context["current_school"] = school
-    return templates.TemplateResponse(template_name, context)
+    return templates.TemplateResponse(request=request, name=template_name, context=context)
