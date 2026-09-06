@@ -1,4 +1,4 @@
-# Attendance Mangement System
+# Attendance Management System
 
 A modern, B2B Multi-Tenant SaaS platform for managing student attendance, built with FastAPI and PostgreSQL, and deployed for free on Render.
 
