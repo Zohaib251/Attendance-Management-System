@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Attendance Records{% endblock %}
+{% block breadcrumb %}<li class="breadcrumb-item active">Attendance</li>{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex align-center justify-between flex-wrap gap-3 fade-in">
+  <div>
+    <h1 class="page-title">Attendance Records</h1>
+    <p class="page-subtitle">Browse and filter all attendance entries</p>
+  </div>
+  <div style="display:flex;gap:.75rem">
+    <a href="{{ url_for('mark_attendance') }}" class="btn btn-primary"><i class="fas fa-pen-to-square"></i> Mark Attendance</a>
+    <a href="{{ url_for('attendance_create') }}" class="btn btn-outline"><i class="fas fa-plus"></i> Single Entry</a>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="card fade-in-delay-1" style="margin-bottom:1rem">
+  <div class="card-body" style="padding:.85rem 1.25rem">
+    <form method="get" style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:160px">
+        <label class="form-label fs-xs">Subject</label>
+        <select name="subject" class="form-select form-select-sm">
+          <option value="">All Subjects</option>
+          {% for s in subjects %}
+          <option value="{{ s.subject_code }}" {% if form and form.cleaned_data and form.cleaned_data.subject == s.subject_code %}selected{% endif %}>{{ s.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="min-width:140px">
+        <label class="form-label fs-xs">From</label>
+        <input type="date" name="date_from" value="{{ form.cleaned_data.date_from if form and form.cleaned_data else '' }}" class="form-control form-control-sm" />
+      </div>
+      <div style="min-width:140px">
+        <label class="form-label fs-xs">To</label>
+        <input type="date" name="date_to" value="{{ form.cleaned_data.date_to if form and form.cleaned_data else '' }}" class="form-control form-control-sm" />
+      </div>
+      <div style="min-width:140px">
+        <label class="form-label fs-xs">Status</label>
+        <select name="status_val" class="form-select form-select-sm">
+          <option value="">All Statuses</option>
+          <option value="Present" {% if form and form.cleaned_data and form.cleaned_data.status == 'Present' %}selected{% endif %}>Present</option>
+          <option value="Absent" {% if form and form.cleaned_data and form.cleaned_data.status == 'Absent' %}selected{% endif %}>Absent</option>
+          <option value="Late" {% if form and form.cleaned_data and form.cleaned_data.status == 'Late' %}selected{% endif %}>Late</option>
+          <option value="Excused" {% if form and form.cleaned_data and form.cleaned_data.status == 'Excused' %}selected{% endif %}>Excused</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-filter"></i> Apply</button>
+      <a href="{{ url_for('attendance_list') }}" class="btn btn-outline btn-sm"><i class="fas fa-xmark"></i></a>
+    </form>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="card fade-in-delay-2">
+  <div class="card-header">
+    <span class="card-title">{{ records|length }} record{% if records|length != 1 %}s{% endif %}</span>
+    <div class="search-bar" style="max-width:220px">
+      <i class="fas fa-search"></i>
+      <input type="text" id="tableSearch" class="form-control" placeholder="Quick search…" />
+    </div>
+  </div>
+  <div class="table-container">
+    {% if records %}
+    <table class="table searchable-table">
+      <thead>
+        <tr><th>Student</th><th>Subject</th><th>Date</th><th>Status</th><th>Remarks</th><th>Marked By</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:.6rem">
+              <div class="avatar sm">{{ r.student.first_name[:1] if r.student else 'S' }}{{ r.student.last_name[:1] if r.student else 'T' }}</div>
+              <a href="{{ url_for('student_detail', student_id=r.student.student_id) }}" style="color:var(--text-primary);text-decoration:none;font-weight:500;font-size:.875rem">{{ r.student.full_name if r.student else '—' }}</a>
+            </div>
+          </td>
+          <td class="fs-sm text-muted">{{ r.subject.title if r.subject else "—" }}</td>
+          <td class="fs-sm">{{ r.lecture_date }}</td>
+          <td><span class="badge badge-{{ r.status.lower() }}">{{ r.status }}</span></td>
+          <td class="fs-xs text-muted">{{ r.remarks or "—" }}</td>
+          <td class="fs-xs text-muted">{{ r.marked_by.username if r.marked_by else "—" }}</td>
+          <td>
+            <div style="display:flex;gap:.35rem">
+              <a href="{{ url_for('attendance_edit', pk=r.id) }}" class="btn btn-outline btn-icon btn-sm" title="Edit"><i class="fas fa-pen"></i></a>
+              <a href="{{ url_for('attendance_delete', pk=r.id) }}" class="btn btn-icon btn-sm" style="background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)" title="Delete"><i class="fas fa-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-clipboard-list"></i>
+      <p>No attendance records found.</p>
+      <a href="{{ url_for('mark_attendance') }}" class="btn btn-primary mt-3">Mark Attendance</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Student{% endblock %}
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{{ url_for('student_list') }}">Students</a></li>
+  <li class="breadcrumb-item active">{{ action }} Student</li>
+{% endblock %}
+
+{% block content %}
+<div class="page-header fade-in">
+  <h1 class="page-title">{{ action }} Student</h1>
+  <p class="page-subtitle">{% if student %}Editing {{ student.full_name }}{% else %}Create a new student record{% endif %}</p>
+</div>
+
+<div style="max-width:700px;" class="fade-in-delay-1">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fas fa-user-graduate" style="color:var(--accent);margin-right:.5rem"></i>Student Information</h3>
+    </div>
+    <div class="card-body">
+      <form method="post" action="{% if student %}{{ url_for('student_edit', student_id=student.student_id) }}{% else %}{{ url_for('student_create') }}{% endif %}">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label class="form-label">First Name *</label>
+            <input type="text" name="first_name" class="form-control" value="{{ student.first_name if student else '' }}" placeholder="First name" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name *</label>
+            <input type="text" name="last_name" class="form-control" value="{{ student.last_name if student else '' }}" placeholder="Last name" required />
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label class="form-label">Email *</label>
+            <input type="email" name="email" class="form-control" value="{{ student.email if student else '' }}" placeholder="student@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mobile No.</label>
+            <input type="text" name="mobile_no" class="form-control" value="{{ student.mobile_no if student else '' }}" placeholder="+1234567890" required />
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label class="form-label">Department</label>
+            <select name="department_id" class="form-select">
+              <option value="">-- Select Department --</option>
+              {% for d in departments %}
+              <option value="{{ d.id }}" {% if student and student.department_id == d.id %}selected{% endif %}>{{ d.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Roll Number</label>
+            <input type="text" name="roll_number" class="form-control" value="{{ student.roll_number if student else '' }}" placeholder="Roll number" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Address</label>
+          <textarea name="address" class="form-control" rows="2">{{ student.address if student else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <input type="checkbox" name="is_active" class="form-check-input" value="true" {% if not student or student.is_active %}checked{% endif %} />
+            <label class="form-label" style="margin:0;cursor:pointer">Active student</label>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="display:flex;gap:.75rem;justify-content:flex-end">
+          <a href="{{ url_for('student_list') }}" class="btn btn-outline">Cancel</a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            {% if student %}Save Changes{% else %}Create Student{% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if not student %}
+  <div class="card" style="margin-top:1rem;border-color:rgba(99,102,241,.2);background:rgba(99,102,241,.05)">
+    <div class="card-body" style="padding:.85rem 1.25rem">
+      <div style="display:flex;gap:.6rem;align-items:flex-start">
+        <i class="fas fa-circle-info" style="color:var(--accent);margin-top:.1rem"></i>
+        <div>
+          <div class="fw-600 fs-sm">Automatic account creation</div>
+          <p class="fs-xs text-muted" style="margin:.2rem 0 0">A student login account will be created automatically with a temporary password. The credentials will be output directly to your console terminal.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
