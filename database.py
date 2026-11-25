@@ -12,13 +12,15 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     DATABASE_URL = "sqlite:///./attendance.db"
 else:
-    DATABASE_URL = DATABASE_URL.strip()
+    DATABASE_URL = DATABASE_URL.strip().strip('"').strip("'")
 
-# Normalize URL scheme so SQLAlchemy uses psycopg2-binary
+# Force postgresql+psycopg2:// because SQLAlchemy 2.1+ defaults postgresql:// to psycopg3
 if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
 elif DATABASE_URL.startswith("postgresql+psycopg://"):
-    DATABASE_URL = DATABASE_URL.replace("postgresql+psycopg://", "postgresql://", 1)
+    DATABASE_URL = DATABASE_URL.replace("postgresql+psycopg://", "postgresql+psycopg2://", 1)
+elif DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
 
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 
