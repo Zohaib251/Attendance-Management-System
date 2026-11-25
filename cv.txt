@@ -1,0 +1,25 @@
+==================================================
+           CV & LINKEDIN SUGGESTIONS
+==================================================
+
+--------------------------------------------------
+1. CV BULLET POINTS (CV mein likhne ke liye 3 main points)
+--------------------------------------------------
+1. Developed and maintained full-stack web applications using Python, FastAPI, and SQL databases, improving system efficiency and data security.
+2. Designed and implemented secure user authentication, role-based access control (RBAC), and automated attendance management workflows.
+3. Engineered RESTful APIs and database migrations (Alembic) to deliver scalable, reliable, and user-friendly software solutions.
+
+--------------------------------------------------
+2. LINKEDIN CONTENT (LinkedIn par likhne ke liye)
+--------------------------------------------------
+
+[Headline Suggestion]:
+Software Engineer | Python & FastAPI Developer | Backend & Web Applications
+
+[About / Summary Section]:
+Passionate Software Engineer with hands-on experience in building scalable web applications, robust backend APIs, and database-driven solutions using Python, FastAPI, and SQL. Dedicated to writing clean, maintainable code and solving complex technical challenges.
+
+[LinkedIn Experience / Featured Section Points]:
+• Built modern web applications including automated Attendance Management Systems with real-time tracking and role-based security.
+• Optimized backend database architectures, Alembic migrations, and API response speeds.
+• Passionate about agile software development, continuous learning, and scalable architecture.

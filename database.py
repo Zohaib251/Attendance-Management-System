@@ -11,10 +11,14 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 # Safe fallback for local development if DATABASE_URL is missing
 if not DATABASE_URL:
     DATABASE_URL = "sqlite:///./attendance.db"
+else:
+    DATABASE_URL = DATABASE_URL.strip()
 
-# Normalize postgres:// to postgresql:// for SQLAlchemy 2 compatibility (Render/Supabase)
+# Normalize URL scheme so SQLAlchemy uses psycopg2-binary
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+elif DATABASE_URL.startswith("postgresql+psycopg://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql+psycopg://", "postgresql://", 1)
 
 connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 
